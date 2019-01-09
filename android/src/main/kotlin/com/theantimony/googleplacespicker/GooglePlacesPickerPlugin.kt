@@ -66,8 +66,9 @@ class GooglePlacesPickerPlugin() : MethodCallHandler, PluginRegistry.ActivityRes
         if (country != null) {
             typeFilterBuilder.setCountry(country)
         }
+        val typeFilter = typeFilterBuilder.build()
         val mode: Int = if (modeToUse == 71) PlaceAutocomplete.MODE_OVERLAY else PlaceAutocomplete.MODE_FULLSCREEN
-        val intent = PlaceAutocomplete.IntentBuilder(mode).build(mActivity)
+        val intent = PlaceAutocomplete.IntentBuilder(mode).setFilter(typeFilter).build(mActivity)
         try {
             mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
         } catch (e: GooglePlayServicesNotAvailableException) {

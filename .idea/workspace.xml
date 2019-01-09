@@ -7,30 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73b1941c-1792-40bd-8a52-f947b320e2d6" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/android/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/android/gradlew.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/theantimony/googleplacespicker/GooglePlacesPickerPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/theantimony/googleplacespicker/GooglePlacesPickerPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/example/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/google_places_picker_example.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flutter_google_places_picker.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/google_places_picker_example_android.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/google_places_picker.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/google_places_picker.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -63,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/theantimony/googleplacespicker/GooglePlacesPickerPlugin.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="271">
-              <caret line="73" column="86" selection-start-line="73" selection-start-column="86" selection-end-line="73" selection-end-column="86" />
+              <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
               <folding>
                 <element signature="e#44#773#0" expanded="true" />
               </folding>
@@ -74,8 +51,8 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="129" lean-forward="true" selection-start-line="129" selection-end-line="129" />
+            <state relative-caret-position="289">
+              <caret line="133" column="17" lean-forward="true" selection-start-line="132" selection-end-line="133" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -319,7 +296,7 @@
     <entry file="file://$PROJECT_DIR$/android/src/main/kotlin/com/theantimony/googleplacespicker/GooglePlacesPickerPlugin.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="271">
-          <caret line="73" column="86" selection-start-line="73" selection-start-column="86" selection-end-line="73" selection-end-column="86" />
+          <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
           <folding>
             <element signature="e#44#773#0" expanded="true" />
           </folding>
@@ -328,8 +305,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="129" lean-forward="true" selection-start-line="129" selection-end-line="129" />
+        <state relative-caret-position="289">
+          <caret line="133" column="17" lean-forward="true" selection-start-line="132" selection-end-line="133" selection-end-column="17" />
         </state>
       </provider>
     </entry>
