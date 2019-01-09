@@ -25,10 +25,11 @@ class PluginGooglePlacePicker {
     return _initPlaceFromMap(placeMap);
   }
 
-  static Future<Place> showAutocomplete(PlaceAutocompleteMode mode) async {
+  static Future<Place> showAutocomplete(PlaceAutocompleteMode mode, {String country}) async {
     var argMap = new Map();
 //    Random values
     argMap["mode"] = mode == PlaceAutocompleteMode.MODE_OVERLAY ? 71 : 72;
+    argMap["country"] = country;
     final Map placeMap = await _channel.invokeMethod('showAutocomplete', argMap);
     return _initPlaceFromMap(placeMap);
   }

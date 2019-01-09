@@ -40,9 +40,13 @@ class _MyAppState extends State<MyApp> {
   _showAutocomplete() async {
     String placeName;
     // Platform messages may fail, so we use a try/catch PlatformException.
-    var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY);
-    placeName = place.name;
-
+    try {
+      var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY, country: "DE");
+      placeName = place.name;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
