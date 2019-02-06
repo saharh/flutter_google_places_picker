@@ -47,9 +47,14 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
     override fun onMethodCall(call: MethodCall, result: Result): Unit {
         mResult = result
         if (call.method.equals("init")) {
-            val apiKey: String = call.argument<String>("apiKey").orEmpty()
-            Places.initialize(mActivity.applicationContext, apiKey)
-            mClient = Places.createClient(mActivity)
+            try {
+                val apiKey: String = call.argument<String>("apiKey").orEmpty()
+                Places.initialize(mActivity.applicationContext, apiKey)
+                mClient = Places.createClient(mActivity)
+                result.success(null)
+            } catch (e : Exception) {
+                result.error(e.message ?: "", null, null)
+            }
 //        } else if (call.method.equals("showPlacePicker")) {
 //            showPlacesPicker()
         } else if (call.method.equals("showAutocomplete")) {
