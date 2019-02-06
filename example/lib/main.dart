@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
+    PluginGooglePlacePicker.init("your_key");
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -38,11 +39,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   _showAutocomplete() async {
-    String placeName;
+//    String placeName;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY, country: "DE");
-      placeName = place.name;
+//      await PluginGooglePlacePicker.fetchPlace(place.id);
+//      placeName = place.name;
     } catch (e) {
       print(e);
       throw e;
@@ -54,9 +56,9 @@ class _MyAppState extends State<MyApp> {
     if (!mounted)
       return;
 
-    setState(() {
-      _placeName = placeName;
-    });
+//    setState(() {
+//      _placeName = placeName;
+//    });
   }
 
   @override

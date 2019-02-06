@@ -10,15 +10,19 @@ class Place {
   String address;
 }
 
-enum PlaceAutocompleteMode {
-  MODE_OVERLAY,
-  MODE_FULLSCREEN
+enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
 
-}
 class PluginGooglePlacePicker {
+  static const MethodChannel _channel = const MethodChannel('plugin_google_place_picker');
 
-  static const MethodChannel _channel =
-      const MethodChannel('plugin_google_place_picker');
+  static Future<void> init(String apiKey) async {
+    await _channel.invokeMethod('init', {"apiKey": apiKey});
+  }
+
+//  static Future<Place> fetchPlace(String placeId) async {
+//    final Map placeMap = await _channel.invokeMethod('fetchPlace', {'id': placeId});
+//    return _initPlaceFromMap(placeMap);
+//  }
 
   static Future<Place> showPlacePicker() async {
     final Map placeMap = await _channel.invokeMethod('showPlacePicker');
@@ -35,23 +39,21 @@ class PluginGooglePlacePicker {
   }
 
   static Place _initPlaceFromMap(Map placeMap) {
-    if (placeMap["latitude"] is double) {
-      return new Place()
-        ..name = placeMap["name"]
-        ..id = placeMap["id"]
-        ..address = placeMap["address"]
-        ..latitude = placeMap["latitude"]
-        ..longitude = placeMap["longitude"];
-    }
-    else {
-      return new Place()
-        ..name = placeMap["name"]
-        ..id = placeMap["id"]
-        ..address = placeMap["address"]
-        ..latitude = double.parse(placeMap["latitude"])
-        ..longitude = double.parse(placeMap["longitude"]);
-    }
-
+    return Place()..id = placeMap["id"];
+//    if (placeMap["latitude"] is double) {
+//      return new Place()
+//        ..name = placeMap["name"]
+//        ..id = placeMap["id"]
+//        ..address = placeMap["address"]
+//        ..latitude = placeMap["latitude"]
+//        ..longitude = placeMap["longitude"];
+//    } else {
+//      return new Place()
+//        ..name = placeMap["name"]
+//        ..id = placeMap["id"]
+//        ..address = placeMap["address"]
+//        ..latitude = double.parse(placeMap["latitude"])
+//        ..longitude = double.parse(placeMap["longitude"]);
+//    }
   }
-
 }
