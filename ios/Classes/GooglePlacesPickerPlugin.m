@@ -32,7 +32,7 @@ UIViewController *vc;
 }
 
 -(void)initializewithApiKey: (NSString *) apiKey {
-    [GMSPlacesClient provideAPIKey:apiKey];
+//    [GMSPlacesClient provideAPIKey:apiKey]; // Not needed anymore, done in AppDelegate (otherwise doesn't work)
 //    placesClient = [GMSPlacesClient sharedClient];
 }
 
