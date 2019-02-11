@@ -8,6 +8,28 @@ class Place {
   String id;
   String name;
   String address;
+  List<AddressComponent> addressComponents;
+}
+
+class AddressComponent {
+  final List<String> types;
+
+  /// JSON long_name
+  final String longName;
+
+  /// JSON short_name
+  final String shortName;
+
+  AddressComponent(
+      this.types,
+      this.longName,
+      this.shortName,
+      );
+
+  factory AddressComponent.fromJson(Map json) => json != null
+      ? new AddressComponent((json["types"] as List)?.cast<String>(),
+      json["long_name"], json["short_name"])
+      : null;
 }
 
 enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
@@ -39,7 +61,12 @@ class PluginGooglePlacePicker {
   }
 
   static Place _initPlaceFromMap(Map placeMap) {
-    return Place()..id = placeMap["id"];
+    var place = Place()..id = placeMap["id"];
+    var addressComp = placeMap["address_components"];
+    if (addressComp is List) {
+      place.addressComponents = addressComp.map((ac) => AddressComponent.fromJson(ac)).where((ac) => ac != null).toList();
+    }
+    return place;
 //    if (placeMap["latitude"] is double) {
 //      return new Place()
 //        ..name = placeMap["name"]

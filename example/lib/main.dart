@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    PluginGooglePlacePicker.init("your_key");
+    PluginGooglePlacePicker.init("YOUR API KEY");
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -42,12 +42,15 @@ class _MyAppState extends State<MyApp> {
 //    String placeName;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY, country: "DE");
+      var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY);
+//      var place = await PluginGooglePlacePicker.showAutocomplete(PlaceAutocompleteMode.MODE_OVERLAY, country: "DE");
+      print('Place: ${place.id}');
+      print('Place addressComponents: ${place.addressComponents}');
 //      await PluginGooglePlacePicker.fetchPlace(place.id);
 //      placeName = place.name;
     } catch (e) {
       print(e);
-      throw e;
+//      throw e;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
