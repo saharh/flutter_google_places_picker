@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class Place {
   double latitude;
@@ -9,27 +10,6 @@ class Place {
   String name;
   String address;
   List<AddressComponent> addressComponents;
-}
-
-class AddressComponent {
-  final List<String> types;
-
-  /// JSON long_name
-  final String longName;
-
-  /// JSON short_name
-  final String shortName;
-
-  AddressComponent(
-      this.types,
-      this.longName,
-      this.shortName,
-      );
-
-  factory AddressComponent.fromJson(Map json) => json != null
-      ? new AddressComponent((json["types"] as List)?.cast<String>(),
-      json["long_name"], json["short_name"])
-      : null;
 }
 
 enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
