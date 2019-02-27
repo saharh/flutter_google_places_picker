@@ -26,7 +26,7 @@ import java.util.*
 class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener {
     lateinit var mActivity: Activity
     lateinit var mClient: PlacesClient
-    var mResult: Result? = null
+    var mPendingResult: Result? = null
 
     companion object {
         val PLACE_PICKER_REQUEST_CODE = 131070
@@ -44,9 +44,9 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
     }
 
 
-    override fun onMethodCall(call: MethodCall, result: Result): Unit {
-        mResult = result
+    override fun onMethodCall(call: MethodCall, result: Result) {
         if (call.method.equals("init")) {
+            setPendingResult(result)
             try {
                 val apiKey: String = call.argument<String>("apiKey").orEmpty()
                 Places.initialize(mActivity.applicationContext, apiKey)
@@ -58,12 +58,20 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //        } else if (call.method.equals("showPlacePicker")) {
 //            showPlacesPicker()
         } else if (call.method.equals("showAutocomplete")) {
+            setPendingResult(result)
             showAutocompletePicker(call.argument("mode"), call.argument("country"))
 //        } else if (call.method.equals("fetchPlace")) {
 //            fetchPlace(call.argument("id"), result)
         } else {
             result.notImplemented()
         }
+    }
+
+    private fun setPendingResult(result: Result) {
+        if (mPendingResult != null) {
+            pendingResultError("Picker in progress", null, null)
+        }
+        mPendingResult = result
     }
 
 //    private fun fetchPlace(placeId: String?, result: Result) {
@@ -73,7 +81,7 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //        }
 //        val fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER, Place.Field.PHOTO_METADATAS, Place.Field.PLUS_CODE, Place.Field.PRICE_LEVEL, Place.Field.RATING, Place.Field.TYPES, Place.Field.USER_RATINGS_TOTAL, Place.Field.VIEWPORT, Place.Field.WEBSITE_URI)
 //        mClient.fetchPlace(FetchPlaceRequest.newInstance(placeId, fields)).addOnSuccessListener { response: FetchPlaceResponse ->
-//            mResult.success(response.place)
+//            mPendingResult.success(response.place)
 //        }
 ////            Place place = response.getPlace()
 ////            Log.i(TAG, "Place found: " + place.getName());
@@ -132,7 +140,7 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //                    placeMap.put("id", place.id)
 //                    placeMap.put("name", place.name.toString())
 //                    placeMap.put("address", place.address.toString())
-//                    mResult?.success(placeMap)
+//                    mPendingResult?.success(placeMap)
 //                    return true
 //
 //                }
@@ -144,7 +152,7 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
                     placeMap.put("id", place.id)
 //                    placeMap.put("name", place.name.toString())
 //                    placeMap.put("address", place.address.toString())
-                    mResult?.success(placeMap)
+                    mPendingResult?.success(placeMap)
                     return true
 //                    val place = PlaceAutocomplete.getPlace(mActivity, p2)
 //                    val placeMap = mutableMapOf<String, Any>()
@@ -153,7 +161,7 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //                    placeMap.put("id", place.id)
 //                    placeMap.put("name", place.name.toString())
 //                    placeMap.put("address", place.address.toString())
-//                    mResult?.success(placeMap)
+//                    mPendingResult?.success(placeMap)
 //                    return true
                 }
             }
@@ -172,12 +180,12 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
     }
 
     fun pendingResultSuccess(o: Any?) {
-        mResult?.success(o)
-        mResult = null
+        mPendingResult?.success(o)
+        mPendingResult = null
     }
 
     fun pendingResultError(s: String, s1: String?, o: Any?) {
-        mResult?.error(s, s1, o)
-        mResult = null
+        mPendingResult?.error(s, s1, o)
+        mPendingResult = null
     }
 }
