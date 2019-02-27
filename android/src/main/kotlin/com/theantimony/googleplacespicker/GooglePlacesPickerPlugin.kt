@@ -59,7 +59,6 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //            showPlacesPicker()
         } else if (call.method.equals("showAutocomplete")) {
             showAutocompletePicker(call.argument("mode"), call.argument("country"))
-//            result.error("bla", "bla2", null)
 //        } else if (call.method.equals("fetchPlace")) {
 //            fetchPlace(call.argument("id"), result)
         } else {
