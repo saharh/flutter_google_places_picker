@@ -152,7 +152,7 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
                     placeMap.put("id", place.id)
 //                    placeMap.put("name", place.name.toString())
 //                    placeMap.put("address", place.address.toString())
-                    mPendingResult?.success(placeMap)
+                    pendingResultSuccess(placeMap)
                     return true
 //                    val place = PlaceAutocomplete.getPlace(mActivity, p2)
 //                    val placeMap = mutableMapOf<String, Any>()
