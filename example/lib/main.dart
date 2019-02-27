@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    PluginGooglePlacePicker.init("YOUR API KEY");
+    PluginGooglePlacePicker.init("AIzaSyCRamwV2lIglEyju_1EHw06unl9gFCFHMw");
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.

@@ -51,14 +51,15 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
                 val apiKey: String = call.argument<String>("apiKey").orEmpty()
                 Places.initialize(mActivity.applicationContext, apiKey)
                 mClient = Places.createClient(mActivity)
-                result.success(null)
-            } catch (e : Exception) {
-                result.error(e.message ?: "", null, null)
+                pendingResultSuccess(null)
+            } catch (e: Exception) {
+                pendingResultError(e.message ?: "", null, null)
             }
 //        } else if (call.method.equals("showPlacePicker")) {
 //            showPlacesPicker()
         } else if (call.method.equals("showAutocomplete")) {
             showAutocompletePicker(call.argument("mode"), call.argument("country"))
+//            result.error("bla", "bla2", null)
 //        } else if (call.method.equals("fetchPlace")) {
 //            fetchPlace(call.argument("id"), result)
         } else {
@@ -92,9 +93,9 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
 //        try {
 //            mActivity.startActivityForResult(builder.build(mActivity), PLACE_PICKER_REQUEST_CODE)
 //        } catch (e: GooglePlayServicesRepairableException) {
-//            mResult?.error("GooglePlayServicesRepairableException", e.message, null)
+//            pendingResultError("GooglePlayServicesRepairableException", e.message, null)
 //        } catch (e: GooglePlayServicesNotAvailableException) {
-//            mResult?.error("GooglePlayServicesNotAvailableException", e.message, null)
+//            pendingResultError("GooglePlayServicesNotAvailableException", e.message, null)
 //        }
 //
 //
@@ -114,9 +115,9 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
         try {
             mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
         } catch (e: GooglePlayServicesNotAvailableException) {
-            mResult?.error("GooglePlayServicesNotAvailableException", e.message, null)
+            pendingResultError("GooglePlayServicesNotAvailableException", e.message, null)
         } catch (e: GooglePlayServicesRepairableException) {
-            mResult?.error("GooglePlayServicesRepairableException", e.message, null)
+            pendingResultError("GooglePlayServicesRepairableException", e.message, null)
         }
 
     }
@@ -159,15 +160,25 @@ class GooglePlacesPickerPlugin() : MethodChannel.MethodCallHandler, PluginRegist
             }
         } else if (p1 == AutocompleteActivity.RESULT_ERROR) {
             val status = Autocomplete.getStatusFromIntent(p2!!)
-            mResult?.error("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
+            pendingResultError("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
 //        } else if (p1 == PlacePicker.RESULT_ERROR) {
 //            val status = PlacePicker.getStatus(mActivity, p2)
-//            mResult?.error("PLACE_PICKER_ERROR", status.statusMessage, null)
+//            pendingResultError("PLACE_PICKER_ERROR", status.statusMessage, null)
         } else if (p1 == RESULT_CANCELED) {
-            mResult?.error("USER_CANCELED", "User has canceled the operation.", null)
+            pendingResultError("USER_CANCELED", "User has canceled the operation.", null)
         } else {
-            mResult?.error("UNKNOWN", "Unknown error.", null)
+            pendingResultError("UNKNOWN", "Unknown error.", null)
         }
         return false
+    }
+
+    fun pendingResultSuccess(o: Any?) {
+        mResult?.success(o)
+        mResult = null
+    }
+
+    fun pendingResultError(s: String, s1: String?, o: Any?) {
+        mResult?.error(s, s1, o)
+        mResult = null
     }
 }
