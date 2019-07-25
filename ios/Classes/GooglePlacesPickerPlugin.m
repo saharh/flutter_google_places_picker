@@ -5,7 +5,7 @@
 
 
 @implementation GooglePlacesPickerPlugin
-FlutterResult _result;
+FlutterResult _pendingResult;
 UIViewController *vc;
 //GMSPlacesClient *placesClient;
 
@@ -19,7 +19,10 @@ UIViewController *vc;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    _result = result;
+    if (_pendingResult != nil) {
+        [self sendError:@"Request in progress" message:nil details:nil];
+    }
+    _pendingResult = result;
     if ([@"init" isEqualToString:call.method]) {
         [self initializewithApiKey: call.arguments[@"apiKey"]];
     } else if ([@"showPlacePicker" isEqualToString:call.method]) {
@@ -31,10 +34,25 @@ UIViewController *vc;
     }
 }
 
+- (void) sendError: (NSString *) code message: (NSString *) message details: (id) details {
+    if (_pendingResult != nil) {
+        FlutterError *err = [FlutterError errorWithCode:code message:message details:details];
+        _pendingResult(err);
+    }
+    _pendingResult = nil;
+}
+
+- (void) sendSuccess: (id) result {
+    if (_pendingResult != nil) {
+        _pendingResult(result);
+    }
+    _pendingResult = nil;
+}
+
 -(void)initializewithApiKey: (NSString *) apiKey {
 //    [GMSPlacesClient provideAPIKey:apiKey]; // Not needed anymore, done in AppDelegate (otherwise doesn't work)
 //    placesClient = [GMSPlacesClient sharedClient];
-    _result(nil);
+    [self sendSuccess:nil];
 }
 
 -(void)showPlacePicker {
@@ -72,8 +90,7 @@ UIViewController *vc;
     if (place.formattedAddress != nil) {
         mutablePlaceMap[@"address"] = place.formattedAddress;
     }
-    _result(mutablePlaceMap);
-    
+    [self sendSuccess:mutablePlaceMap];
 }
 
 - (void)viewController:(nonnull GMSAutocompleteViewController *)viewController didAutocompleteWithPlace:(nonnull GMSPlace *)place {
@@ -90,7 +107,7 @@ UIViewController *vc;
 //        mutablePlaceMap[@"address"] = place.formattedAddress;
 //    }
 //    _result(mutablePlaceMap);
-    _result(placeMap);
+    [self sendSuccess:placeMap];
 }
 
 -(NSArray *)addressComponentsToArray: (NSArray *) array {
@@ -105,26 +122,26 @@ UIViewController *vc;
     [vc dismissViewControllerAnimated:YES completion:nil];
     FlutterError *fError = [FlutterError errorWithCode:@"PLACE_AUTOCOMPLETE_ERROR" message:error.localizedDescription details:nil];
     [vc dismissViewControllerAnimated:YES completion:nil];
-    _result(fError);
+    [self sendError:fError.code message:fError.message details:fError.details];
 }
 
 - (void)placePicker:(GMSPlacePickerViewController *)viewController didFailWithError:(NSError *)error {
     [vc dismissViewControllerAnimated:YES completion:nil];
     FlutterError *fError = [FlutterError errorWithCode:@"PLACE_PICKER_ERROR" message:error.localizedDescription details:nil];
-    _result(fError);
+    [self sendError:fError.code message:fError.message details:fError.details];
 }
 
 - (void)wasCancelled:(nonnull GMSAutocompleteViewController *)viewController {
     [vc dismissViewControllerAnimated:YES completion:nil];
     FlutterError *fError = [FlutterError errorWithCode:@"USER_CANCELED" message:@"User has canceled the operation." details:nil];
-    _result(fError);
+    [self sendError:fError.code message:fError.message details:fError.details];
 }
 
 - (void)placePickerDidCancel:(GMSPlacePickerViewController *)viewController {
     [vc dismissViewControllerAnimated:YES completion:nil];
     FlutterError *fError = [FlutterError errorWithCode:@"USER_CANCELED" message:@"User has canceled the operation." details:nil];
     [vc dismissViewControllerAnimated:YES completion:nil];
-    _result(fError);
+    [self sendError:fError.code message:fError.message details:fError.details];
 }
 
 @end
