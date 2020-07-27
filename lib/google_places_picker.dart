@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class Place {
   double latitude;
@@ -8,6 +9,7 @@ class Place {
   String id;
   String name;
   String address;
+  List<AddressComponent> addressComponents;
 }
 
 enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
@@ -58,21 +60,27 @@ class PluginGooglePlacePicker {
   }
 
   static Place _initPlaceFromMap(Map placeMap) {
-    if (placeMap["latitude"] is double) {
-      return new Place()
-        ..name = placeMap["name"]
-        ..id = placeMap["id"]
-        ..address = placeMap["address"]
-        ..latitude = placeMap["latitude"]
-        ..longitude = placeMap["longitude"];
-    } else {
-      return new Place()
-        ..name = placeMap["name"]
-        ..id = placeMap["id"]
-        ..address = placeMap["address"]
-        ..latitude = double.parse(placeMap["latitude"])
-        ..longitude = double.parse(placeMap["longitude"]);
+    var place = Place()..id = placeMap["id"];
+    var addressComp = placeMap["address_components"];
+    if (addressComp is List) {
+      place.addressComponents = addressComp.map((ac) => AddressComponent.fromJson(ac)).where((ac) => ac != null).toList();
     }
+    return place;
+//    if (placeMap["latitude"] is double) {
+//      return new Place()
+//        ..name = placeMap["name"]
+//        ..id = placeMap["id"]
+//        ..address = placeMap["address"]
+//        ..latitude = placeMap["latitude"]
+//        ..longitude = placeMap["longitude"];
+//    } else {
+//      return new Place()
+//        ..name = placeMap["name"]
+//        ..id = placeMap["id"]
+//        ..address = placeMap["address"]
+//        ..latitude = double.parse(placeMap["latitude"])
+//        ..longitude = double.parse(placeMap["longitude"]);
+//    }
   }
 
   static String _convertFilterTypeToString(TypeFilter type) {
