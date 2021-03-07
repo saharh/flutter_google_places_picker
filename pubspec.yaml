@@ -9,7 +9,7 @@ dependencies:
   google_maps_webservice:
     git:
       url: https://github.com/saharh/google_maps_webservice.git
-      ref: github
+      ref: sahar
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 environment:
