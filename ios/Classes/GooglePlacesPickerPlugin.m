@@ -1,5 +1,4 @@
 #import "GooglePlacesPickerPlugin.h"
-@import GoogleMaps;
 @import GooglePlaces;
 
 @implementation GooglePlacesPickerPlugin
@@ -44,13 +43,26 @@ NSDictionary *filterTypes;
         _result(fError);
     }
     [GMSPlacesClient provideAPIKey:apiKey];
-    [GMSServices provideAPIKey:apiKey];
     _result(nil);
 }
 
 -(void)showAutocomplete:(NSString *)filter bounds:(NSDictionary *)boundsDictionary restriction:(NSDictionary *)restriction country:(NSString *)country {
     
     GMSAutocompleteViewController *autocompleteController = [[GMSAutocompleteViewController alloc] init];
+    if (@available(iOS 12.0, *)) {
+        // Prevent white text on white screen
+        if ([[[UIScreen mainScreen] traitCollection] userInterfaceStyle] == UIUserInterfaceStyleDark) {
+            autocompleteController.primaryTextColor = UIColor.whiteColor;
+            autocompleteController.secondaryTextColor = UIColor.lightGrayColor;
+            autocompleteController.tableCellSeparatorColor = UIColor.lightGrayColor;
+            autocompleteController.tableCellBackgroundColor = UIColor.darkGrayColor;
+        } else {
+            autocompleteController.primaryTextColor = UIColor.blackColor;
+            autocompleteController.secondaryTextColor = UIColor.lightGrayColor;
+            autocompleteController.tableCellSeparatorColor = UIColor.lightGrayColor;
+            autocompleteController.tableCellBackgroundColor = UIColor.whiteColor;
+        }
+    }
     
     GMSAutocompleteFilter *autocompleteFilter = [[GMSAutocompleteFilter alloc] init];
     autocompleteController.autocompleteFilter = autocompleteFilter;
