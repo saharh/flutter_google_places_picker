@@ -9,7 +9,7 @@ class Place {
   late String id;
   String? name;
   String? address;
-  List<AddressComponent> addressComponents;
+  List<AddressComponent>? addressComponents;
 }
 
 enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
