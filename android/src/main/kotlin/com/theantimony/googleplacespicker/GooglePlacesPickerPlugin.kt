@@ -18,13 +18,12 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import java.lang.Exception
 
 
 class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegistry.ActivityResultListener, ActivityAware {
@@ -32,7 +31,8 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
     var mChannel: MethodChannel? = null
     var mBinding: ActivityPluginBinding? = null
 
-    private var mResult: Result? = null
+    //    private var mResult: Result? = null
+    private var mResultWrapper: ResultWrapper? = null
     private val mFilterTypes = mapOf(
             Pair("address", TypeFilter.ADDRESS),
             Pair("cities", TypeFilter.CITIES),
@@ -64,7 +64,8 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-        mResult = result
+        mResultWrapper = ResultWrapper(result)
+//        mResult = result
         if (call.method.equals("showAutocomplete")) {
             showAutocompletePicker(
                     call.argument("mode"),
@@ -82,7 +83,7 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
 
     fun initialize(apiKey: String?) {
         if (apiKey.isNullOrEmpty()) {
-            mResult?.error("API_KEY_ERROR", "Invalid Android API Key", null)
+            mResultWrapper?.error("API_KEY_ERROR", "Invalid Android API Key", null)
             return
         }
         try {
@@ -91,9 +92,9 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
                     Places.initialize(it.applicationContext, apiKey)
                 }
             }
-            mResult?.success(null)
+            mResultWrapper?.success(null)
         } catch (e: Exception) {
-            mResult?.error("API_KEY_ERROR", e.localizedMessage, null)
+            mResultWrapper?.error("API_KEY_ERROR", e.localizedMessage, null)
         }
     }
 
@@ -143,38 +144,38 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
             try {
                 it.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
             } catch (e: GooglePlayServicesNotAvailableException) {
-                mResult?.error("GooglePlayServicesNotAvailableException", e.message, null)
+                mResultWrapper?.error("GooglePlayServicesNotAvailableException", e.message, null)
             } catch (e: GooglePlayServicesRepairableException) {
-                mResult?.error("GooglePlayServicesRepairableException", e.message, null)
+                mResultWrapper?.error("GooglePlayServicesRepairableException", e.message, null)
             }
         }
 
 
-
     }
 
-    override fun onActivityResult(p0: Int, p1: Int, p2: Intent?): Boolean {
-        if (p0 != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            return false
-        }
-        if (p1 == RESULT_OK && p2 != null) {
-            val place = Autocomplete.getPlaceFromIntent(p2)
-            val placeMap = mutableMapOf<String, Any>()
-            placeMap.put("latitude", place.latLng?.latitude ?: 0.0)
-            placeMap.put("longitude", place.latLng?.longitude ?: 0.0)
-            placeMap.put("id", place.id ?: "")
-            placeMap.put("name", place.name ?: "")
-            placeMap.put("address", place.address ?: "")
-            mResult?.success(placeMap)
-        } else if (p1 == AutocompleteActivity.RESULT_ERROR && p2 != null) {
-            val status = Autocomplete.getStatusFromIntent(p2)
-            mResult?.error("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
-        } else if (p1 == RESULT_CANCELED) {
-            mResult?.error("USER_CANCELED", "User has canceled the operation.", null)
-        } else {
-            mResult?.error("UNKNOWN", "Unknown error.", null)
-        }
-        return true
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+        return mResultWrapper?.onActivityResult(requestCode, resultCode, data) ?: false
+//        if (p0 != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+//            return false
+//        }
+//        if (p1 == RESULT_OK && p2 != null) {
+//            val place = Autocomplete.getPlaceFromIntent(p2)
+//            val placeMap = mutableMapOf<String, Any>()
+//            placeMap.put("latitude", place.latLng?.latitude ?: 0.0)
+//            placeMap.put("longitude", place.latLng?.longitude ?: 0.0)
+//            placeMap.put("id", place.id ?: "")
+//            placeMap.put("name", place.name ?: "")
+//            placeMap.put("address", place.address ?: "")
+//            mResult?.success(placeMap)
+//        } else if (p1 == AutocompleteActivity.RESULT_ERROR && p2 != null) {
+//            val status = Autocomplete.getStatusFromIntent(p2)
+//            mResult?.error("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
+//        } else if (p1 == RESULT_CANCELED) {
+//            mResult?.error("USER_CANCELED", "User has canceled the operation.", null)
+//        } else {
+//            mResult?.error("UNKNOWN", "Unknown error.", null)
+//        }
+//        return true
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -207,5 +208,63 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
         mActivity = null
         mBinding?.removeActivityResultListener(this)
         mBinding = null
+    }
+
+    internal class ResultWrapper constructor(result: Result) : PluginRegistry.ActivityResultListener, Result {
+        // There's no way to unregister permission listeners in the v1 embedding, so we'll be called
+        // duplicate times in cases where the user denies and then grants a permission. Keep track of if
+        // we've responded before and bail out of handling the callback manually if this is a repeat
+        // call.
+        var alreadyCalled = false
+        val result: Result = result
+
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+            if (requestCode != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+                return false
+            }
+            if (requestCode != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+                return false
+            }
+            if (resultCode == RESULT_OK && data != null) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                val placeMap = mutableMapOf<String, Any>()
+                placeMap.put("latitude", place.latLng?.latitude ?: 0.0)
+                placeMap.put("longitude", place.latLng?.longitude ?: 0.0)
+                placeMap.put("id", place.id ?: "")
+                placeMap.put("name", place.name ?: "")
+                placeMap.put("address", place.address ?: "")
+                success(placeMap)
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
+                val status = Autocomplete.getStatusFromIntent(data)
+                error("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
+            } else if (resultCode == RESULT_CANCELED) {
+                error("USER_CANCELED", "User has canceled the operation.", null)
+            } else {
+                error("UNKNOWN", "Unknown error.", null)
+            }
+            return true
+        }
+
+        override fun success(result: Any?) {
+            if (!alreadyCalled) {
+                alreadyCalled = true
+                this.result.success(result)
+            }
+        }
+
+        override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+            if (!alreadyCalled) {
+                alreadyCalled = true
+                this.result.error(errorCode, errorMessage, errorDetails)
+            }
+        }
+
+        override fun notImplemented() {
+            if (!alreadyCalled) {
+                alreadyCalled = true
+                this.result.notImplemented()
+            }
+        }
+
     }
 }
