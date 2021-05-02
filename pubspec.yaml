@@ -6,10 +6,10 @@ homepage: https://github.com/derTuca/flutter_google_places_picker
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_webservice:
-    git:
-      url: https://github.com/saharh/google_maps_webservice.git
-      ref: sahar
+  google_maps_webservice: ^0.0.20-nullsafety.5
+#    git:
+#      url: https://github.com/saharh/google_maps_webservice.git
+#      ref: sahar
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 environment:
