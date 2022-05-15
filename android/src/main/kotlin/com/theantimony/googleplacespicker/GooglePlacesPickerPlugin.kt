@@ -252,7 +252,7 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
             }
         }
 
-        override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
+        override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
             if (!alreadyCalled) {
                 alreadyCalled = true
                 this.result.error(errorCode, errorMessage, errorDetails)
