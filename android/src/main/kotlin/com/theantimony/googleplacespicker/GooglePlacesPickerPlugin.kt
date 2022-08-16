@@ -109,6 +109,7 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
         val fields = listOf(
                 Place.Field.ID,
                 Place.Field.ADDRESS,
+                Place.Field.ADDRESS_COMPONENTS,
                 Place.Field.NAME,
                 Place.Field.LAT_LNG
         )
@@ -222,18 +223,10 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
             if (requestCode != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
                 return false
             }
-            if (requestCode != PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-                return false
-            }
             if (resultCode == RESULT_OK && data != null) {
                 val place = Autocomplete.getPlaceFromIntent(data)
-                val placeMap = mutableMapOf<String, Any>()
-                placeMap.put("latitude", place.latLng?.latitude ?: 0.0)
-                placeMap.put("longitude", place.latLng?.longitude ?: 0.0)
-                placeMap.put("id", place.id ?: "")
-                placeMap.put("name", place.name ?: "")
-                placeMap.put("address", place.address ?: "")
-                success(placeMap)
+                val map = placeToMap(place);
+                success(map)
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
                 val status = Autocomplete.getStatusFromIntent(data)
                 error("PLACE_AUTOCOMPLETE_ERROR", status.statusMessage, null)
@@ -243,6 +236,23 @@ class GooglePlacesPickerPlugin() : FlutterPlugin, MethodCallHandler, PluginRegis
                 error("UNKNOWN", "Unknown error.", null)
             }
             return true
+        }
+
+        fun placeToMap(place: Place): MutableMap<String, Any?> {
+            val placeMap = mutableMapOf<String, Any?>()
+            placeMap.put("id", place.id)
+            placeMap.put("latitude", place.latLng?.latitude)
+            placeMap.put("longitude", place.latLng?.longitude)
+            placeMap.put("name", place.name)
+            placeMap.put("address", place.address)
+            placeMap.put("address_components", place.addressComponents?.asList()?.map {
+                val map = mutableMapOf<String, Any?>()
+                map.put("short_name", it.shortName)
+                map.put("long_name", it.name)
+                map.put("types", it.types)
+                map
+            })
+            return placeMap;
         }
 
         override fun success(result: Any?) {

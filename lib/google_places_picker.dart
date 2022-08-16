@@ -60,10 +60,16 @@ class PluginGooglePlacePicker {
   }
 
   static Place _initPlaceFromMap(Map placeMap) {
-    var place = Place()..id = placeMap["id"];
+    var place = Place()
+      ..name = placeMap["name"]
+      ..address = placeMap["address"]
+      ..latitude = placeMap["latitude"] is double ? placeMap["latitude"] : null
+      ..longitude = placeMap["longitude"] is double ? placeMap["longitude"] : null
+      ..id = placeMap["id"];
+
     var addressComp = placeMap["address_components"];
     if (addressComp is List) {
-      place.addressComponents = addressComp.map((ac) => AddressComponent.fromJson(ac)).where((ac) => ac != null).toList();
+      place.addressComponents = addressComp.map((ac) => AddressComponent.fromJson(Map<String,Object?>.from(ac))).where((ac) => ac != null).toList();
     }
     return place;
 //    if (placeMap["latitude"] is double) {
