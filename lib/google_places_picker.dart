@@ -10,6 +10,17 @@ class Place {
   String? name;
   String? address;
   List<AddressComponent>? addressComponents;
+
+  @override
+  String toString() {
+    return 'Place{latitude: $latitude, longitude: $longitude, id: $id, name: $name, address: $address, addressComponents: ${addressComponents?.map((e) => e.description())}}';
+  }
+}
+
+extension AddressComponentToString on AddressComponent {
+  String description() {
+    return 'AddressComponent{types: $types, longName: $longName, shortName: $shortName}';
+  }
 }
 
 enum PlaceAutocompleteMode { MODE_OVERLAY, MODE_FULLSCREEN }
@@ -21,6 +32,18 @@ class LocationBias {
   double northEastLng = 180.0;
   double southWestLat = 0.0;
   double southWestLng = 0.0;
+
+  LocationBias({
+    required this.northEastLat,
+    required this.northEastLng,
+    required this.southWestLat,
+    required this.southWestLng,
+  });
+
+  @override
+  String toString() {
+    return 'LocationBias{northEastLat: $northEastLat, northEastLng: $northEastLng, southWestLat: $southWestLat, southWestLng: $southWestLng}';
+  }
 }
 
 class LocationRestriction {
@@ -28,11 +51,22 @@ class LocationRestriction {
   double northEastLng = 180.0;
   double southWestLat = 0.0;
   double southWestLng = 0.0;
+
+  LocationRestriction({
+    required this.northEastLat,
+    required this.northEastLng,
+    required this.southWestLat,
+    required this.southWestLng,
+  });
+
+  @override
+  String toString() {
+    return 'LocationRestriction{northEastLat: $northEastLat, northEastLng: $northEastLng, southWestLat: $southWestLat, southWestLng: $southWestLng}';
+  }
 }
 
 class PluginGooglePlacePicker {
-  static const MethodChannel _channel =
-      const MethodChannel('plugin_google_place_picker');
+  static const MethodChannel _channel = const MethodChannel('plugin_google_place_picker');
 
   static Future<Place> showAutocomplete({
     required PlaceAutocompleteMode mode,
@@ -48,15 +82,12 @@ class PluginGooglePlacePicker {
       "type": _convertFilterTypeToString(typeFilter),
       "country": countryCode
     };
-    final Map placeMap =
-        await (_channel.invokeMethod('showAutocomplete', argMap));
+    final Map placeMap = await (_channel.invokeMethod('showAutocomplete', argMap));
     return _initPlaceFromMap(placeMap);
   }
 
-  static Future<void> initialize(
-      {String? androidApiKey, String? iosApiKey}) async {
-    await _channel.invokeMethod(
-        'initialize', {"androidApiKey": androidApiKey, "iosApiKey": iosApiKey});
+  static Future<void> initialize({String? androidApiKey, String? iosApiKey}) async {
+    await _channel.invokeMethod('initialize', {"androidApiKey": androidApiKey, "iosApiKey": iosApiKey});
   }
 
   static Place _initPlaceFromMap(Map placeMap) {
@@ -69,7 +100,10 @@ class PluginGooglePlacePicker {
 
     var addressComp = placeMap["address_components"];
     if (addressComp is List) {
-      place.addressComponents = addressComp.map((ac) => AddressComponent.fromJson(Map<String,Object?>.from(ac))).where((ac) => ac != null).toList();
+      place.addressComponents = addressComp
+          .map((ac) => AddressComponent.fromJson(Map<String, Object?>.from(ac)))
+          .where((ac) => ac != null)
+          .toList();
     }
     return place;
 //    if (placeMap["latitude"] is double) {
@@ -119,8 +153,7 @@ class PluginGooglePlacePicker {
     };
   }
 
-  static Map<String, double>? _convertLocationRestrictionToMap(
-      LocationRestriction? restriction) {
+  static Map<String, double>? _convertLocationRestrictionToMap(LocationRestriction? restriction) {
     if (restriction == null) {
       return null;
     }
