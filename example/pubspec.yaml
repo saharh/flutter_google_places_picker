@@ -3,7 +3,7 @@ description: Demonstrates how to use the google_places_picker plugin.
 
 environment:
   sdk: ">=1.19.0 <3.0.0"
-  flutter: ">=0.2.4 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
   flutter:

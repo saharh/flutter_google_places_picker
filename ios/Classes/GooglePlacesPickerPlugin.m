@@ -25,8 +25,8 @@ UIViewController *vc;
     _pendingResult = result;
     if ([@"init" isEqualToString:call.method]) {
         [self initializewithApiKey: call.arguments[@"apiKey"]];
-    } else if ([@"showPlacePicker" isEqualToString:call.method]) {
-        [self showPlacePicker];
+//    } else if ([@"showPlacePicker" isEqualToString:call.method]) { // DEPRECATED
+//        [self showPlacePicker];
     } else if ([@"showAutocomplete" isEqualToString:call.method]) {
         [self showAutocomplete:call.arguments[@"country"]];
     } else {
@@ -55,17 +55,18 @@ UIViewController *vc;
     [self sendSuccess:nil];
 }
 
--(void)showPlacePicker {
-    GMSPlacePickerConfig *config = [[GMSPlacePickerConfig alloc] initWithViewport:nil];
-    GMSPlacePickerViewController *placePicker = [[GMSPlacePickerViewController alloc] initWithConfig:config];
-    placePicker.delegate = self;
-    [vc presentViewController:placePicker animated:YES completion:nil];
-}
+//-(void)showPlacePicker { // DEPRECATED
+//    GMSPlacePickerConfig *config = [[GMSPlacePickerConfig alloc] initWithViewport:nil];
+//    GMSPlacePickerViewController *placePicker = [[GMSPlacePickerViewController alloc] initWithConfig:config];
+//    placePicker.delegate = self;
+//    [vc presentViewController:placePicker animated:YES completion:nil];
+//}
 
 -(void)showAutocomplete: (NSString *) country {
     GMSAutocompleteViewController *autocompleteController = [[GMSAutocompleteViewController alloc] init];
     autocompleteController.delegate = self;
-    GMSPlaceField fields = (GMSPlaceFieldPlaceID | GMSPlaceFieldAddressComponents);
+//    GMSPlaceField fields = (GMSPlaceFieldPlaceID | GMSPlaceFieldAddressComponents);
+    GMSPlaceField fields = (GMSPlaceFieldPlaceID);
     autocompleteController.placeFields = fields;
     GMSAutocompleteFilter *filter = [[GMSAutocompleteFilter alloc] init];
     filter.type = kGMSPlacesAutocompleteTypeFilterAddress;
@@ -78,20 +79,20 @@ UIViewController *vc;
     
 }
 
-- (void)placePicker:(nonnull GMSPlacePickerViewController *)viewController didPickPlace:(nonnull GMSPlace *)place {
-    [vc dismissViewControllerAnimated:YES completion:nil];
-    NSDictionary *placeMap = @{
-                               @"name" : place.name,
-                               @"latitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.latitude],
-                               @"longitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.longitude],
-                               @"id" : place.placeID,
-                               };
-    NSMutableDictionary *mutablePlaceMap = placeMap.mutableCopy;
-    if (place.formattedAddress != nil) {
-        mutablePlaceMap[@"address"] = place.formattedAddress;
-    }
-    [self sendSuccess:mutablePlaceMap];
-}
+//- (void)placePicker:(nonnull GMSPlacePickerViewController *)viewController didPickPlace:(nonnull GMSPlace *)place { // DEPERCATED
+//    [vc dismissViewControllerAnimated:YES completion:nil];
+//    NSDictionary *placeMap = @{
+//                               @"name" : place.name,
+//                               @"latitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.latitude],
+//                               @"longitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.longitude],
+//                               @"id" : place.placeID,
+//                               };
+//    NSMutableDictionary *mutablePlaceMap = placeMap.mutableCopy;
+//    if (place.formattedAddress != nil) {
+//        mutablePlaceMap[@"address"] = place.formattedAddress;
+//    }
+//    [self sendSuccess:mutablePlaceMap];
+//}
 
 - (void)viewController:(nonnull GMSAutocompleteViewController *)viewController didAutocompleteWithPlace:(nonnull GMSPlace *)place {
     [vc dismissViewControllerAnimated:YES completion:nil];
@@ -125,11 +126,11 @@ UIViewController *vc;
     [self sendError:fError.code message:fError.message details:fError.details];
 }
 
-- (void)placePicker:(GMSPlacePickerViewController *)viewController didFailWithError:(NSError *)error {
-    [vc dismissViewControllerAnimated:YES completion:nil];
-    FlutterError *fError = [FlutterError errorWithCode:@"PLACE_PICKER_ERROR" message:error.localizedDescription details:nil];
-    [self sendError:fError.code message:fError.message details:fError.details];
-}
+//- (void)placePicker:(GMSPlacePickerViewController *)viewController didFailWithError:(NSError *)error { // DEPRECATED
+//    [vc dismissViewControllerAnimated:YES completion:nil];
+//    FlutterError *fError = [FlutterError errorWithCode:@"PLACE_PICKER_ERROR" message:error.localizedDescription details:nil];
+//    [self sendError:fError.code message:fError.message details:fError.details];
+//}
 
 - (void)wasCancelled:(nonnull GMSAutocompleteViewController *)viewController {
     [vc dismissViewControllerAnimated:YES completion:nil];
@@ -137,11 +138,11 @@ UIViewController *vc;
     [self sendError:fError.code message:fError.message details:fError.details];
 }
 
-- (void)placePickerDidCancel:(GMSPlacePickerViewController *)viewController {
-    [vc dismissViewControllerAnimated:YES completion:nil];
-    FlutterError *fError = [FlutterError errorWithCode:@"USER_CANCELED" message:@"User has canceled the operation." details:nil];
-    [vc dismissViewControllerAnimated:YES completion:nil];
-    [self sendError:fError.code message:fError.message details:fError.details];
-}
+//- (void)placePickerDidCancel:(GMSPlacePickerViewController *)viewController { // DEPRECATED
+//    [vc dismissViewControllerAnimated:YES completion:nil];
+//    FlutterError *fError = [FlutterError errorWithCode:@"USER_CANCELED" message:@"User has canceled the operation." details:nil];
+//    [vc dismissViewControllerAnimated:YES completion:nil];
+//    [self sendError:fError.code message:fError.message details:fError.details];
+//}
 
 @end

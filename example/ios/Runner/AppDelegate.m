@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 #include "GeneratedPluginRegistrant.h"
 @import GooglePlaces;
-@import GoogleMaps;
+//@import GoogleMaps;
 
 @implementation AppDelegate
 
@@ -9,7 +9,7 @@
   [GeneratedPluginRegistrant registerWithRegistry:self];
     NSString *googlePlacesApiKey = @"YOUR_IOS_RESTRICTED_API_KEY";
     [GMSPlacesClient provideAPIKey:googlePlacesApiKey];
-    [GMSServices provideAPIKey:googlePlacesApiKey];
+//    [GMSServices provideAPIKey:googlePlacesApiKey];
 
   // Override point for customization after application launch.
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
