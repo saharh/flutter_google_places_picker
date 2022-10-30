@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_places_picker/google_places_picker.dart';
 
 
@@ -74,8 +73,8 @@ class _MyAppState extends State<MyApp> {
         body: new Center(
           child: new Column(
             children: <Widget>[
-              new FlatButton(onPressed: _showPlacePicker, child: new Text("Show place picker")),
-              new FlatButton(onPressed: _showAutocomplete, child: new Text("Show autocomplete")),
+              new TextButton(onPressed: _showPlacePicker, child: new Text("Show place picker")),
+              new TextButton(onPressed: _showAutocomplete, child: new Text("Show autocomplete")),
               new Row(
                 children: <Widget>[
                   new Text("Place name: "),

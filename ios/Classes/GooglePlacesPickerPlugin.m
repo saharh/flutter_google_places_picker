@@ -1,7 +1,7 @@
 #import "GooglePlacesPickerPlugin.h"
 //@import GoogleMaps;
 @import GooglePlaces;
-@import GooglePlacePicker;
+// @import GooglePlacePicker;
 
 
 @implementation GooglePlacesPickerPlugin

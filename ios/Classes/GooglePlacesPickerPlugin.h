@@ -1,5 +1,5 @@
 #import <Flutter/Flutter.h>
-@import GooglePlacePicker;
+// @import GooglePlacePicker;
 
 @interface GooglePlacesPickerPlugin : NSObject<FlutterPlugin, GMSPlacePickerViewControllerDelegate, GMSAutocompleteViewControllerDelegate>
 @end
