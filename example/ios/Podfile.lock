@@ -2,10 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - google_places_picker (0.0.3):
     - Flutter
-    - GooglePlaces (~> 4.0)
-  - GoogleMaps/Base (4.1.0)
-  - GooglePlaces (4.1.0):
-    - GoogleMaps/Base (= 4.1.0)
+    - GooglePlaces
+  - GooglePlaces (5.1.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -13,7 +11,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - GoogleMaps
     - GooglePlaces
 
 EXTERNAL SOURCES:
@@ -23,11 +20,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_places_picker/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  google_places_picker: 7bf77312e2791a727b37abb0f7c8fef39d98b14d
-  GoogleMaps: 008e2c80e38605b56b560e8deb73d4194ff30bef
-  GooglePlaces: a058b776259c13e1323c9ff135549cb1b13ad8e7
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  google_places_picker: 2c1adabbc286fc34f872de2ba721f52012b9908c
+  GooglePlaces: c57cd5aa7e91d10fa5106c792de74f3bd6436260
 
-PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+PODFILE CHECKSUM: e5ee00144d04e7b168ba7ea28a9753540e444f3d
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3

@@ -22,17 +22,9 @@ class _MyAppState extends State<MyApp> {
 
   _showAutocomplete() async {
     String placeName;
-    var locationBias = LocationBias()
-      ..northEastLat = 20.0
-      ..northEastLng = 20.0
-      ..southWestLat = 0.0
-      ..southWestLng = 0.0;
+    var locationBias = LocationBias(northEastLat: 20.0, northEastLng:20.0, southWestLat: 0.0, southWestLng: 0.0);
 
-    var locationRestriction = LocationRestriction()
-      ..northEastLat = 20.0
-      ..northEastLng = 20.0
-      ..southWestLng = 0.0
-      ..southWestLat = 0.0;
+    var locationRestriction = LocationRestriction(northEastLat: 20.0, northEastLng:20.0, southWestLat: 0.0, southWestLng: 0.0);
 
     var country = "US";
 
