@@ -119,15 +119,30 @@ NSDictionary *filterTypes;
 
 - (void)viewController:(nonnull GMSAutocompleteViewController *)viewController didAutocompleteWithPlace:(nonnull GMSPlace *)place {
     [vc dismissViewControllerAnimated:YES completion:nil];
+    
     NSDictionary *placeMap = @{
-                               @"name" : place.name,
-                               @"latitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.latitude],
-                               @"longitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.longitude],
-                               @"id" : place.placeID,
-                               };
+        @"name" : place.name,
+        @"latitude" : [NSNumber numberWithDouble: place.coordinate.latitude],
+        @"longitude" : [NSNumber numberWithDouble: place.coordinate.longitude],
+//        @"latitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.latitude],
+//        @"longitude" : [NSString stringWithFormat:@"%.7f", place.coordinate.longitude],
+        @"id" : place.placeID,
+    };
     NSMutableDictionary *mutablePlaceMap = placeMap.mutableCopy;
     if (place.formattedAddress != nil) {
         mutablePlaceMap[@"address"] = place.formattedAddress;
+    }
+    if (place.addressComponents != nil) {
+        NSMutableArray *acArr = [[NSMutableArray alloc] init];
+        for (GMSAddressComponent *ac in place.addressComponents) {
+            NSDictionary *acMap = @{
+                @"short_name": ac.shortName,
+                @"long_name": ac.name,
+                @"types": ac.types,
+            };
+            [acArr addObject:acMap];
+        }
+        mutablePlaceMap[@"address_components"] = acArr;
     }
     _result(mutablePlaceMap);
 }
