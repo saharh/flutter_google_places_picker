@@ -108,7 +108,9 @@ NSDictionary *filterTypes;
         }
                 
     }
-    
+    GMSPlaceField placeFields = (GMSPlaceFieldPlaceID | GMSPlaceFieldFormattedAddress | GMSPlaceFieldAddressComponents | GMSPlaceFieldName | GMSPlaceFieldCoordinate);
+
+    autocompleteController.placeFields = placeFields;
     autocompleteController.delegate = self;
     UIViewController *vc = [UIApplication sharedApplication].delegate.window.rootViewController;
     [vc presentViewController:autocompleteController animated:YES completion:nil];
